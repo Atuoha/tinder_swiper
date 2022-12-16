@@ -5,18 +5,18 @@ class ProviderData extends ChangeNotifier {
 
   Offset get position => _position;
 
-  void updateUpdatePosition(position) {
-    _position = position;
+  void updateUpdatePosition(DragUpdateDetails details) {
+    _position += details.delta;
     notifyListeners();
   }
 
-  void updateEndPosition(position) {
-    _position = position;
+  void updateEndPosition(DragEndDetails details) {
+    // _position += details.;
     notifyListeners();
   }
 
-  void updateStartPosition(position) {
-    _position = position;
+  void updateStartPosition(DragStartDetails position) {
+    // _position += position.;
     notifyListeners();
   }
 }

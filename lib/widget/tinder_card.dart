@@ -19,16 +19,30 @@ class _TinderCardState extends State<TinderCard> {
   }
 
   Widget buildFrontCard() {
+    var providerData = Provider.of<ProviderData>(context, listen: false);
+    var provider = Provider.of<ProviderData>(context);
+
     return GestureDetector(
-      child: buildCard(),
+      child: Builder(builder: (context) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 0),
+          curve: Curves.easeIn,
+          transform: Matrix4.identity()
+            ..translate(
+              provider.position.dx,
+              provider.position.dy,
+            ),
+          child: buildCard(),
+        );
+      }),
       onPanUpdate: (details) {
-        Provider.of<ProviderData>(context).updateEndPosition(details);
+        providerData.updateUpdatePosition(details);
       },
       onPanStart: (details) {
-        Provider.of<ProviderData>(context).updateStartPosition(details);
+        providerData.updateStartPosition(details);
       },
       onPanEnd: (details) {
-        Provider.of<ProviderData>(context).updateEndPosition(details);
+        providerData.updateEndPosition(details);
       },
     );
   }
