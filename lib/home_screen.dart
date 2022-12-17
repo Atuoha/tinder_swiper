@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(16),
           child: const TinderCard(
             imgUrl:
-                'https://i.pinimg.com/564x/f5/72/72/f572723e31d6972cdd65d93dbf481d40.jpg',
+                'images/m.jpg',
           ),
         ),
       ),

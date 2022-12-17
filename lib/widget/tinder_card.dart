@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tinder_swiper/provider/data.dart';
@@ -12,6 +14,16 @@ class TinderCard extends StatefulWidget {
 
 class _TinderCardState extends State<TinderCard> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Size size = MediaQuery.of(context).size;
+      final providerData = Provider.of<ProviderData>(context, listen: false);
+      providerData.updateScreenSize(size);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: buildFrontCard(),
@@ -19,15 +31,22 @@ class _TinderCardState extends State<TinderCard> {
   }
 
   Widget buildFrontCard() {
-    var providerData = Provider.of<ProviderData>(context, listen: false);
-    var provider = Provider.of<ProviderData>(context);
+    final providerData = Provider.of<ProviderData>(context, listen: false);
+    final provider = Provider.of<ProviderData>(context);
 
     return GestureDetector(
-      child: Builder(builder: (context) {
+      child: LayoutBuilder(builder: (context, constraints) {
+        final center = constraints.smallest.center(Offset.zero);
+        final angle = provider.angle * pi / 180;
+        final rotatedMatrix = Matrix4.identity()
+          ..translate(center.dx, center.dy)
+          ..rotateZ(angle)
+          ..translate(-center.dx, -center.dy);
+
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 0),
+          duration: Duration(milliseconds: providerData.isDragging ? 400 : 0),
           curve: Curves.easeIn,
-          transform: Matrix4.identity()
+          transform: rotatedMatrix
             ..translate(
               provider.position.dx,
               provider.position.dy,
@@ -36,13 +55,13 @@ class _TinderCardState extends State<TinderCard> {
         );
       }),
       onPanUpdate: (details) {
-        providerData.updateUpdatePosition(details);
+        providerData.updatePosition(details);
       },
       onPanStart: (details) {
-        providerData.updateStartPosition(details);
+        providerData.startPosition(details);
       },
       onPanEnd: (details) {
-        providerData.updateEndPosition(details);
+        providerData.endPosition();
       },
     );
   }
@@ -52,9 +71,9 @@ class _TinderCardState extends State<TinderCard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
-            image: NetworkImage(widget.imgUrl),
+            image: AssetImage(widget.imgUrl),
             fit: BoxFit.cover,
-            alignment: const Alignment(-0.3, 3)),
+            alignment: const Alignment(-0.3, 3),),
       ),
     );
   }
