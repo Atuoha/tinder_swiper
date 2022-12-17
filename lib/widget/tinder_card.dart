@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:tinder_swiper/provider/data.dart';
 
 class TinderCard extends StatefulWidget {
-  const TinderCard({Key? key, required this.imgUrl}) : super(key: key);
+  const TinderCard({Key? key, required this.imgUrl, required this.isFrontImage}) : super(key: key);
   final String imgUrl;
+  final bool isFrontImage;
 
   @override
   State<TinderCard> createState() => _TinderCardState();
@@ -26,7 +27,7 @@ class _TinderCardState extends State<TinderCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: buildFrontCard(),
+      child: widget.isFrontImage ? buildFrontCard(): buildCard(),
     );
   }
 
