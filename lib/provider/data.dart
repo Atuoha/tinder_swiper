@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+enum Status { like, dislike, love }
+
 class ProviderData extends ChangeNotifier {
   List<String> _imgUrls = [];
   Size _screenSize = Size.zero;
@@ -34,7 +36,50 @@ class ProviderData extends ChangeNotifier {
   }
 
   void endPosition() {
+    _isDragging = false;
     resetPosition();
+
+    final status = getStatus();
+
+    switch (status) {
+      case Status.like:
+        implementLike();
+        break;
+      case Status.dislike:
+        implementDislike();
+        break;
+      case Status.love:
+        implementLove();
+        break;
+      default:
+        break;
+    }
+
+    notifyListeners();
+  }
+
+  implementLike(){
+
+  }
+
+  implementDislike(){
+
+  }
+
+  implementLove(){
+
+  }
+
+  Status? getStatus() {
+    final x = _position.dx;
+    var delta = 100;
+    if (x >= delta) {
+      return Status.like;
+    } else if (x <= delta) {
+      return Status.dislike;
+    } else {
+      return Status.love;
+    }
   }
 
   void startPosition(DragStartDetails position) {

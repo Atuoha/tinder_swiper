@@ -20,6 +20,25 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        title: const Text(
+          'Prime Ape Planet (PAP) Nft',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),
+        ),
+        backgroundColor: Colors.white,
+        centerTitle: true,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: const FloatingActionButton(
+        onPressed: null,
+        backgroundColor: Colors.black,
+        child: Icon(
+          Icons.star,
+          color: Colors.orange,
+        ),
+      ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
