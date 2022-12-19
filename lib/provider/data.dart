@@ -20,7 +20,7 @@ class ProviderData extends ChangeNotifier {
   double get angle => _angle;
 
   ProviderData() {
-    resetPictures();
+    setPictures();
   }
 
   void updatePosition(DragUpdateDetails details) {
@@ -37,7 +37,6 @@ class ProviderData extends ChangeNotifier {
 
   void endPosition() {
     _isDragging = false;
-    resetPosition();
 
     final status = getStatus();
 
@@ -52,22 +51,35 @@ class ProviderData extends ChangeNotifier {
         implementLove();
         break;
       default:
+        resetPosition();
         break;
     }
+    notifyListeners();
 
+  }
+
+  implementLike() {
+    _angle = 20;
+    _position += Offset(2 * _screenSize.width, 0);
+    _nextCard();
     notifyListeners();
   }
 
-  implementLike(){
-
+  implementDislike() {
+    _angle = 20;
+    _position += Offset(2 * _screenSize.width, 0);
+    _nextCard();
+    notifyListeners();
   }
 
-  implementDislike(){
+  implementLove() {}
 
-  }
+  Future _nextCard() async {
+    if (_imgUrls.isEmpty) return;
 
-  implementLove(){
-
+    await Future.delayed(const Duration(milliseconds: 200));
+    _imgUrls.removeLast();
+    resetPosition();
   }
 
   Status? getStatus() {
@@ -94,7 +106,7 @@ class ProviderData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetPictures() {
+  void setPictures() {
     _imgUrls = [
       'images/a.jpg',
       'images/c.jpg',

@@ -25,7 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: const Text(
           'Prime Ape Planet (PAP) Nft',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -49,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildWidgets() {
-    final providerData = Provider.of<ProviderData>(context, listen: false);
+    final providerData = Provider.of<ProviderData>(context);
     final imgUrls = providerData.imgUrls;
 
     return Stack(
