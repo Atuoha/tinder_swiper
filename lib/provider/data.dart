@@ -8,7 +8,7 @@ class ProviderData extends ChangeNotifier {
   bool _isDragging = false;
   Offset _position = Offset.zero;
   double _angle = 0;
-  String currentStatus = "";
+  String currentStatus = "waiting...🖐️";
 
   List<String> get imgUrls => _imgUrls;
 
@@ -58,6 +58,8 @@ class ProviderData extends ChangeNotifier {
           resetPosition();
           break;
       }
+    }else{
+      currentStatus = 'waiting...🖐️';
     }
 
     switch (status) {
@@ -85,13 +87,18 @@ class ProviderData extends ChangeNotifier {
   }
 
   implementDislike() {
-    _angle = 20;
-    _position += Offset(2 * _screenSize.width, 0);
+    _angle = -20;
+    _position -= Offset(2 * _screenSize.width, 0);
     _nextCard();
     notifyListeners();
   }
 
-  implementLove() {}
+  implementLove() {
+    _angle = 20;
+    _position -= Offset(0, _screenSize.height);
+    _nextCard();
+    notifyListeners();
+  }
 
   Future _nextCard() async {
     if (_imgUrls.isEmpty) return;
@@ -108,14 +115,17 @@ class ProviderData extends ChangeNotifier {
 
   Status? getStatus() {
     final x = _position.dx;
+    final y = _position.dy;
+    final forceLove = x.abs() < 20;
     var delta = 100;
     if (x >= delta) {
       return Status.like;
-    } else if (x <= delta) {
+    } else if (x <= -delta) {
       return Status.dislike;
-    } else {
+    } else if (y <= -delta / 2 && forceLove) {
       return Status.love;
     }
+    return null;
   }
 
   void startPosition(DragStartDetails position) {
