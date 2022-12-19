@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:provider/provider.dart';
 import 'package:tinder_swiper/provider/data.dart';
 
 class TinderCard extends StatefulWidget {
-  const TinderCard({Key? key, required this.imgUrl, required this.isFrontImage}) : super(key: key);
+  const TinderCard({Key? key, required this.imgUrl, required this.isFrontImage})
+      : super(key: key);
   final String imgUrl;
   final bool isFrontImage;
 
@@ -25,9 +27,15 @@ class _TinderCardState extends State<TinderCard> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ToastContext().init(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: widget.isFrontImage ? buildFrontCard(): buildCard(),
+      child: widget.isFrontImage ? buildFrontCard() : buildCard(),
     );
   }
 
@@ -57,14 +65,24 @@ class _TinderCardState extends State<TinderCard> {
       }),
       onPanUpdate: (details) {
         providerData.updatePosition(details);
+        displayToast();
       },
       onPanStart: (details) {
         providerData.startPosition(details);
+        displayToast();
       },
       onPanEnd: (details) {
         providerData.endPosition();
+        displayToast();
       },
     );
+  }
+
+  displayToast() {
+    final status =
+        Provider.of<ProviderData>(context, listen: false).currentStatus;
+
+    Toast.show(status, gravity: Toast.bottom, duration: 2);
   }
 
   Widget buildCard() {
@@ -72,9 +90,10 @@ class _TinderCardState extends State<TinderCard> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         image: DecorationImage(
-            image: AssetImage(widget.imgUrl),
-            fit: BoxFit.cover,
-            alignment: const Alignment(-0.3, 3),),
+          image: AssetImage(widget.imgUrl),
+          fit: BoxFit.cover,
+          alignment: const Alignment(-0.3, 3),
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ class ProviderData extends ChangeNotifier {
   bool _isDragging = false;
   Offset _position = Offset.zero;
   double _angle = 0;
+  String currentStatus = "";
 
   List<String> get imgUrls => _imgUrls;
 
@@ -39,6 +40,25 @@ class ProviderData extends ChangeNotifier {
     _isDragging = false;
 
     final status = getStatus();
+    if (status != null) {
+      currentStatus = status.toString().split('.').last;
+      switch (status) {
+        case Status.like:
+          currentStatus = '$currentStatus 👍';
+
+          break;
+        case Status.dislike:
+          currentStatus = '$currentStatus 👎';
+
+          break;
+        case Status.love:
+          currentStatus = '$currentStatus ❤';
+          break;
+        default:
+          resetPosition();
+          break;
+      }
+    }
 
     switch (status) {
       case Status.like:
@@ -55,7 +75,6 @@ class ProviderData extends ChangeNotifier {
         break;
     }
     notifyListeners();
-
   }
 
   implementLike() {
@@ -78,7 +97,12 @@ class ProviderData extends ChangeNotifier {
     if (_imgUrls.isEmpty) return;
 
     await Future.delayed(const Duration(milliseconds: 200));
-    _imgUrls.removeLast();
+    if (_imgUrls.length == 1) {
+      resetPictures();
+    } else {
+      _imgUrls.removeLast();
+    }
+
     resetPosition();
   }
 
@@ -107,6 +131,26 @@ class ProviderData extends ChangeNotifier {
   }
 
   void setPictures() {
+    _imgUrls = [
+      'images/a.jpg',
+      'images/c.jpg',
+      'images/e.jpg',
+      'images/f.jpg',
+      'images/h.jpg',
+      'images/i.jpg',
+      'images/j.jpg',
+      'images/k.jpg',
+      'images/l.jpg',
+      'images/m.jpg',
+      'images/o.jpg',
+      'images/p.jpg',
+      'images/q.jpg',
+      'images/r.jpg',
+    ].reversed.toList();
+    notifyListeners();
+  }
+
+  void resetPictures() {
     _imgUrls = [
       'images/a.jpg',
       'images/c.jpg',
